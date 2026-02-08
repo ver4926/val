@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ========== INTRO SCREEN ========== */
+        .screen {
+            display: none;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========== INTRO SCREEN ========== */
+        .intro-screen {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .intro-screen .title {
+            font-size: 3em;
+            color: #e94b3c;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .intro-screen .subtitle {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .intro-screen .description {
+            font-size: 1em;
+            color: #999;
+            margin-bottom: 40px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .btn-start:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        /* ========== MESSAGE SCREEN ========== */
+        .message-screen {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .message-screen .emoji-header {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .message-screen h2 {
+            font-size: 2em;
+            color: #e94b3c;
+            margin-bottom: 15px;
+        }
+
+        .message-screen p {
+            font-size: 1.1em;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #eee;
+            border-radius: 10px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+        }
+
+        .message-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .message-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* ========== PUZZLE SCREEN ========== */
+        .puzzle-screen {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .puzzle-screen h2 {
+            text-align: center;
+            color: #e94b3c;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+
+        .puzzle-instruction {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1em;
+        }
+
+        .puzzle-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .puzzle-piece {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            border: 2px solid #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .puzzle-piece:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .puzzle-piece.revealed {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            pointer-events: none;
+        }
+
+        /* ========== SWIPE SCREEN ========== */
+        .swipe-screen {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .swipe-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .swipe-header h2 {
+            color: #e94b3c;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .swipe-progress {
+            text-align: center;
+            color: #999;
+            font-size: 1em;
+        }
+
+        .card-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 30px;
+            perspective: 1000px;
+        }
+
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            cursor: grab;
+            user-select: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        .card:active {
+            cursor: grabbing;
+        }
+
+        .card.dragging {
+            transition: none;
+        }
+
+        .card.exit-left {
+            animation: exitLeft 0.5s ease-out forwards;
+        }
+
+        .card.exit-right {
+            animation: exitRight 0.5s ease-out forwards;
+        }
+
+        @keyframes exitLeft {
+            to {
+                opacity: 0;
+                transform: translateX(-500px) rotateZ(-30deg);
+            }
+        }
+
+        @keyframes exitRight {
+            to {
+                opacity: 0;
+                transform: translateX(500px) rotateZ(30deg);
+            }
+        }
+
+        .card.hidden {
+            display: none;
+        }
+
+        .card-number {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-content {
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .card-controls {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .card-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-btn-no {
+            background: #ddd;
+            color: #999;
+        }
+
+        .card-btn-no:hover {
+            transform: scale(1.1);
+            background: #ccc;
+        }
+
+        .card-btn-yes {
+            background: white;
+            color: #e94b3c;
+            font-weight: bold;
+        }
+
+        .card-btn-yes:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ========== FINAL SCREEN ========== */
+        .final-screen {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .final-screen .emoji {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .final-screen h1 {
+            font-size: 2.5em;
+            color: #e94b3c;
+            margin-bottom: 15px;
+        }
+
+        .final-screen p {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .final-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .final-btn-yes {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .final-btn-yes:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .final-btn-restart {
+            background: #ddd;
+            color: #333;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .final-btn-restart:hover {
+            background: #ccc;
+            transform: scale(1.05);
+        }
+
+        /* ========== ANIMATIONS ========== */
+        .heart-animation {
+            position: fixed;
+            font-size: 2em;
+            pointer-events: none;
+            animation: floatUp 2s ease-out forwards;
+            z-index: 1000;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) translateX(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) translateX(50px) scale(0.5);
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            font-size: 1.5em;
+            animation: floatDown 2.5s ease-in forwards;
+            z-index: 1000;
+        }
+
+        @keyframes floatDown {
+            to {
+                opacity: 0;
+                transform: translateY(300px) rotate(360deg);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .intro-screen,
+            .puzzle-screen,
+            .swipe-screen,
+            .final-screen {
+                padding: 30px 20px;
+            }
+
+            .intro-screen .title {
+                font-size: 2.2em;
+            }
+
+            .puzzle-container {
+                gap: 10px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- INTRO SCREEN -->
+        <div class="screen active intro-screen" id="introScreen">
+            <div class="title">💕</div>
+            <h1 style="font-size: 2.2em; color: #333; margin-bottom: 10px;">Hey beautiful!</h1>
+            <p class="subtitle">I have something special to share with you...</p>
+            <p class="description">This Valentine's Day, I want to ask you something important in the most fun way possible!</p>
+            <button class="btn-start" onclick="startJourney()">Let's Begin 🚀</button>
+        </div>
+
+        <!-- MESSAGE SCREEN 1 -->
+        <div class="screen message-screen" id="messageScreen1">
+            <div class="emoji-header">💌</div>
+            <h2>A Sweet Message</h2>
+            <p>Every single day with you is a gift.</p>
+            <p>You bring so much joy, laughter, and love into my life.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 33%;"></div>
+            </div>
+            <button class="message-btn" onclick="nextScreen('messageScreen2')">Continue 💕</button>
+        </div>
+
+        <!-- MESSAGE SCREEN 2 -->
+        <div class="screen message-screen" id="messageScreen2">
+            <div class="emoji-header">🌹</div>
+            <h2>You Make Me Smile</h2>
+            <p>No matter what happens in the day, your smile brightens everything.</p>
+            <p>Being with you feels like coming home.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 66%;"></div>
+            </div>
+            <button class="message-btn" onclick="nextScreen('messageScreen3')">Continue 💕</button>
+        </div>
+
+        <!-- MESSAGE SCREEN 3 -->
+        <div class="screen message-screen" id="messageScreen3">
+            <div class="emoji-header">✨</div>
+            <h2>You're My Person</h2>
+            <p>I want to share all my moments with you - the big ones and the small ones.</p>
+            <p>You're my favorite person to spend time with.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%;"></div>
+            </div>
+            <button class="message-btn" onclick="nextScreen('puzzleScreen')">Next Challenge 🎮</button>
+        </div>
+
+        <!-- PUZZLE SCREEN -->
+        <div class="screen puzzle-screen" id="puzzleScreen">
+            <h2>💝 Unlock The Magic 💝</h2>
+            <p class="puzzle-instruction">Click all pieces to reveal the next step!</p>
+            <div class="puzzle-container">
+                <div class="puzzle-piece" data-emoji="❤️" onclick="revealPuzzle(0, event)"></div>
+                <div class="puzzle-piece" data-emoji="💕" onclick="revealPuzzle(1, event)"></div>
+                <div class="puzzle-piece" data-emoji="😍" onclick="revealPuzzle(2, event)"></div>
+                <div class="puzzle-piece" data-emoji="🌹" onclick="revealPuzzle(3, event)"></div>
+                <div class="puzzle-piece" data-emoji="💑" onclick="revealPuzzle(4, event)"></div>
+                <div class="puzzle-piece" data-emoji="✨" onclick="revealPuzzle(5, event)"></div>
+                <div class="puzzle-piece" data-emoji="💘" onclick="revealPuzzle(6, event)"></div>
+                <div class="puzzle-piece" data-emoji="🎉" onclick="revealPuzzle(7, event)"></div>
+                <div class="puzzle-piece" data-emoji="💞" onclick="revealPuzzle(8, event)"></div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="puzzleProgress" style="width: 0%;"></div>
+            </div>
+            <p style="text-align: center; color: #999; font-size: 0.9em;">Revealed: <span id="puzzleCount">0</span>/9</p>
+        </div>
+
+        <!-- SWIPE SCREEN -->
+        <div class="screen swipe-screen" id="swipeScreen">
+            <div class="swipe-header">
+                <h2>💭 Reasons Why...</h2>
+                <p class="swipe-progress"><span id="cardNumber">1</span> of 5</p>
+            </div>
+
+            <div class="card-container" id="cardContainer"></div>
+
+            <div class="card-controls">
+                <button class="card-btn card-btn-no" onclick="rejectCard()">😢</button>
+                <button class="card-btn card-btn-yes" onclick="acceptCard()">💕</button>
+            </div>
+
+            <p style="text-align: center; color: #999; font-size: 0.9em;">Swipe right to continue →</p>
+        </div>
+
+        <!-- FINAL SCREEN -->
+        <div class="screen final-screen" id="finalScreen">
+            <div class="emoji">💕</div>
+            <h1>Will You Be My Valentine?</h1>
+            <p>I couldn't think of anyone else I'd rather spend this day with.</p>
+            <p style="font-size: 1.1em; font-weight: bold; color: #e94b3c;">So... what do you say? 👉👈</p>
+            <div class="final-buttons">
+                <button class="final-btn-yes" onclick="answerYes()">YES! I'D LOVE TO! 💕</button>
+                <button class="final-btn-restart" onclick="resetExperience()">Not Sure Yet...</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let puzzleRevealed = 0;
+        let currentCardIndex = 0;
+        let startX = 0;
+        let currentX = 0;
+
+        const cards = [
+            { number: '1️⃣', title: 'Reason #1', content: 'You make me laugh every single day!' },
+            { number: '2️⃣', title: 'Reason #2', content: 'Your smile brightens my entire world' },
+            { number: '3️⃣', title: 'Reason #3', content: 'You\'re my favorite person to spend time with' },
+            { number: '4️⃣', title: 'Reason #4', content: 'Being with you feels like home' },
+            { number: '5️⃣', title: 'The Big Question', content: 'Ready for the grand finale?' }
+        ];
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextScreen(screenId) {
+            showScreen(screenId);
+        }
+
+        function startJourney() {
+            showScreen('messageScreen1');
+        }
+
+        // ========== PUZZLE LOGIC ==========
+        function revealPuzzle(index, e) {
+            const pieces = document.querySelectorAll('.puzzle-piece');
+            if (!pieces[index].classList.contains('revealed')) {
+                pieces[index].classList.add('revealed');
+                puzzleRevealed++;
+                createHeart(e.clientX, e.clientY);
+
+                document.getElementById('puzzleCount').textContent = puzzleRevealed;
+                document.getElementById('puzzleProgress').style.width = (puzzleRevealed / 9 * 100) + '%';
+
+                if (puzzleRevealed === 9) {
+                    setTimeout(() => {
+                        showScreen('swipeScreen');
+                        initializeCards();
+                        createConfetti();
+                    }, 500);
+                }
+            }
+        }
+
+        function createHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.className = 'heart-animation';
+            heart.textContent = '❤️';
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 2000);
+        }
+
+        // ========== SWIPE LOGIC ==========
+        function initializeCards() {
+            const container = document.getElementById('cardContainer');
+            container.innerHTML = '';
+            currentCardIndex = 0;
+            container.appendChild(createCard(0));
+        }
+
+        function createCard(index) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="card-number">${cards[index].number}</div>
+                <div class="card-title">${cards[index].title}</div>
+                <div class="card-content">${cards[index].content}</div>
+            `;
+
+            card.addEventListener('mousedown', startDrag);
+            card.addEventListener('touchstart', startDrag);
+
+            return card;
+        }
+
+        function startDrag(e) {
+            const card = e.currentTarget;
+            startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            card.classList.add('dragging');
+
+            const handleMove = (moveEvent) => {
+                currentX = moveEvent.type.includes('mouse') ? moveEvent.clientX : moveEvent.touches[0].clientX;
+                const diff = currentX - startX;
+                card.style.transform = `translateX(${diff}px) rotateZ(${diff * 0.1}deg)`;
+            };
+
+            const handleEnd = () => {
+                card.classList.remove('dragging');
+                document.removeEventListener('mousemove', handleMove);
+                document.removeEventListener('mouseup', handleEnd);
+                document.removeEventListener('touchmove', handleMove);
+                document.removeEventListener('touchend', handleEnd);
+
+                if (Math.abs(currentX - startX) > 100) {
+                    if (currentX > startX) acceptCard();
+                    else rejectCard();
+                } else {
+                    card.style.transform = '';
+                }
+            };
+
+            document.addEventListener('mousemove', handleMove);
+            document.addEventListener('mouseup', handleEnd);
+            document.addEventListener('touchmove', handleMove);
+            document.addEventListener('touchend', handleEnd);
+        }
+
+        function acceptCard() {
+            const container = document.getElementById('cardContainer');
+            const card = container.querySelector('.card');
+            if (card) {
+                card.classList.add('exit-right');
+                setTimeout(() => {
+                    currentCardIndex++;
+                    if (currentCardIndex >= cards.length) {
+                        showScreen('finalScreen');
+                        createConfetti();
+                    } else {
+                        container.innerHTML = '';
+                        container.appendChild(createCard(currentCardIndex));
+                        document.getElementById('cardNumber').textContent = currentCardIndex + 1;
+                    }
+                }, 500);
+            }
+        }
+
+        function rejectCard() {
+            const container = document.getElementById('cardContainer');
+            const card = container.querySelector('.card');
+            if (card) {
+                card.classList.add('exit-left');
+                setTimeout(() => {
+                    currentCardIndex++;
+                    if (currentCardIndex >= cards.length) {
+                        showScreen('finalScreen');
+                        createConfetti();
+                    } else {
+                        container.innerHTML = '';
+                        container.appendChild(createCard(currentCardIndex));
+                        document.getElementById('cardNumber').textContent = currentCardIndex + 1;
+                    }
+                }, 500);
+            }
+        }
+
+        // ========== FINAL LOGIC ==========
+        function answerYes() {
+            const screen = document.getElementById('finalScreen');
+            screen.innerHTML = `
+                <div class="emoji">🎉</div>
+                <h1>YES! I'M SO HAPPY! 🎉</h1>
+                <p>This is the best Valentine's Day ever!</p>
+                <p style="font-size: 1.2em; font-weight: bold; color: #e94b3c; margin: 20px 0;">I can't wait to celebrate with you! 💕</p>
+                <p style="color: #999;">Thank you for making every moment special.</p>
+            `;
+            createConfetti();
+            createConfetti();
+            createConfetti();
+        }
+
+        function resetExperience() {
+            location.reload();
+        }
+
+        function createConfetti() {
+            const count = 40;
+            for (let i = 0; i < count; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.textContent = ['❤️', '💕', '✨', '🎉', '💝', '🌹'][Math.floor(Math.random() * 6)];
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-30px';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+    </script>
+</body>
+</html>
